@@ -5,11 +5,11 @@
   "license": "ISC",
   "author": "",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
-    "start": "next start",
+    "dev": "nodemon app.js",
+    "build": "prisma generate",
+    "start": "node app.js",
     "postinstall": "prisma generate"
   },
   "dependencies": {
