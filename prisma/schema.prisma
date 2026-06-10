@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Schedule {
+  id           String   @id @default(uuid())  
+  class_code   String   @db.VarChar(10)      
+  class_name   String   @db.VarChar(10)      
+  subject_code String   @db.VarChar(10)      
+  teacher_nik  String   @db.VarChar(20)      
+  teacher_name String   @db.VarChar(100)     
+  date         DateTime @db.Date              
+  jam_ke       Int                            
+  time_start   DateTime @db.Time             
+  time_end     DateTime @db.Time             
+
+  @@map("schedules")
+}
