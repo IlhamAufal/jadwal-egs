@@ -1,6 +1,18 @@
+require('dotenv/config');
+
+const { PrismaPg } = require('@prisma/adapter-pg');
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 const ExcelJS = require('exceljs');
+
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
+
+const normalizeSchedulePayload = (payload) => ({
+    ...payload,
+    date: payload.date ? new Date(payload.date) : payload.date,
+    time_start: payload.time_start ? new Date(payload.time_start) : payload.time_start,
+    time_end: payload.time_end ? new Date(payload.time_end) : payload.time_end
+});
 
 
 const getSchedules = async (req, res) => {
@@ -26,7 +38,9 @@ const getScheduleById = async (req, res) => {
 
 const createSchedule = async (req, res) => {
     try {
-        const data = await prisma.schedule.create({ data: req.body });
+        const data = await prisma.schedule.create({
+            data: normalizeSchedulePayload(req.body)
+        });
         res.status(201).json(data);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -37,7 +51,7 @@ const updateSchedule = async (req, res) => {
     try {
         const data = await prisma.schedule.update({
             where: { id: req.params.id },
-            data: req.body
+            data: normalizeSchedulePayload(req.body)
         });
         res.json(data);
     } catch (error) {
@@ -128,7 +142,7 @@ const uploadExcel = async (req, res) => {
     }
 };
 
-// GET /api/schedule/export?start_date=...&end_date=...
+// GET /api/schedules/export?start_date=...&end_date=...
 const exportExcelReport = async (req, res) => {
     try {
         const { start_date, end_date } = req.query;

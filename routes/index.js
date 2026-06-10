@@ -3,6 +3,6 @@ const scheduleRoutes = require('./scheduleRoutes');
 
 const router = express.Router();
 
-router.use('/schedule', scheduleRoutes);
+router.use('/schedules', scheduleRoutes);
 
 module.exports = router;
